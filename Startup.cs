@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace LocationIp
 {
@@ -26,23 +27,15 @@ namespace LocationIp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
-            services.AddControllers();
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "LocationIp", Version = "v1" });
-            });
+            string connection = "Host=localhost;Database=postgres;Username=postgres;Password=123";
+            services.AddDbContext<postgresContext>(options => options.UseNpgsql(connection));
+            services.AddControllers(); 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "LocationIp v1"));
-            }
+            app.UseDeveloperExceptionPage();
 
             app.UseHttpsRedirection();
 
