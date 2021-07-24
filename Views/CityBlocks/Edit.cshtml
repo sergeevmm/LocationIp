@@ -1,0 +1,79 @@
+﻿@model LocationIp.CityBlock
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>CityBlock</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Network" class="control-label"></label>
+                <input asp-for="Network" class="form-control" />
+                <span asp-validation-for="Network" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="GeonameId" class="control-label"></label>
+                <input asp-for="GeonameId" class="form-control" />
+                <span asp-validation-for="GeonameId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RegisteredCountryGeonameId" class="control-label"></label>
+                <input asp-for="RegisteredCountryGeonameId" class="form-control" />
+                <span asp-validation-for="RegisteredCountryGeonameId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RepresentedCountryGeonameId" class="control-label"></label>
+                <input asp-for="RepresentedCountryGeonameId" class="form-control" />
+                <span asp-validation-for="RepresentedCountryGeonameId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IsAnonymousProxy" class="control-label"></label>
+                <input asp-for="IsAnonymousProxy" class="form-control" />
+                <span asp-validation-for="IsAnonymousProxy" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IsSatelliteProvider" class="control-label"></label>
+                <input asp-for="IsSatelliteProvider" class="form-control" />
+                <span asp-validation-for="IsSatelliteProvider" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PostalCode" class="control-label"></label>
+                <input asp-for="PostalCode" class="form-control" />
+                <span asp-validation-for="PostalCode" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Latitude" class="control-label"></label>
+                <input asp-for="Latitude" class="form-control" />
+                <span asp-validation-for="Latitude" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Longitude" class="control-label"></label>
+                <input asp-for="Longitude" class="form-control" />
+                <span asp-validation-for="Longitude" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AccuracyRadius" class="control-label"></label>
+                <input asp-for="AccuracyRadius" class="form-control" />
+                <span asp-validation-for="AccuracyRadius" class="text-danger"></span>
+            </div>
+            <input type="hidden" asp-for="CityBlocksId" />
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
