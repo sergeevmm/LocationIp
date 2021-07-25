@@ -1,34 +1,30 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Npgsql;
 
 #nullable disable
 
 namespace LocationIp
 {
     public partial class postgresContext : DbContext
-    {
-        public postgresContext()
-        {
-        }
-
-        public postgresContext(DbContextOptions<postgresContext> options)
-            : base(options)
-        {
-            Database.EnsureCreated();
-        }
-
+    { 
         public virtual DbSet<AsnBlock> AsnBlocks { get; set; }
         public virtual DbSet<CityBlock> CityBlocks { get; set; }
         public virtual DbSet<CityLocation> CityLocations { get; set; }
         public virtual DbSet<CountryBlock> CountryBlocks { get; set; }
         public virtual DbSet<CountryLocation> CountryLocations { get; set; }
-
+         
+        public postgresContext(DbContextOptions<postgresContext> options)
+            : base(options)
+        {
+            Database.EnsureCreated();
+        }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseNpgsql("Host=localhost;Database=postgres;Username=postgres;Password=123");
+                optionsBuilder.UseNpgsql(this.Database.GetConnectionString());
             }
         }
 
@@ -235,5 +231,6 @@ namespace LocationIp
         }
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+
     }
 }

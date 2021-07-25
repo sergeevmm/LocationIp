@@ -7,8 +7,7 @@ using System.Threading.Tasks;
 namespace LocationIp.Models
 {
     public class LocationData
-    {
-        public long CityBlockId { get; set; } 
+    { 
         public string ContinentName { get; set; }
         public string CityName { get; set; }
         public string Subdivision1Name { get; set; }

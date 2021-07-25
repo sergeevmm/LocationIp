@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Mvc; 
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -19,42 +17,40 @@ namespace LocationIp.Controllers
         public LocationIpController(postgresContext context)
         {
             _context = context;
-        }
+        }  
 
-        // GET api/CityBlock/5
-        //[HttpGet("{Id}")]
-        //public async Task<ActionResult<CityBlock>> Get(int id)
-        //{
-        //    CityBlock user = await _context.CityBlocks.FirstOrDefaultAsync(x => x.CityBlocksId == id);
-        //    if (user == null)
-        //        return NotFound();
-        //    return new ObjectResult(user);
-        //}
-
-        //WeatherForecast/146.120.179.129
+        //LocationIp/146.120.179.129
+        [Route("{ipStr}")]
         [HttpGet]
-        public IEnumerable<LocationData> Get(string ipStr)
+        public ActionResult<LocationData> Get(string ipStr)
         {
-            ipStr = "146.120.179.129";
+            IPAddress ipAddr;
+            if (!IPAddress.TryParse(ipStr, out ipAddr)) 
+                ModelState.AddModelError("IPAddress", "Не корректный IP-адрес"); 
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
             NpgsqlConnection connection = new NpgsqlConnection(_context.Database.GetConnectionString());
+            connection.Open();
+
             string query = $@"select city_blocks_id from city_blocks
                               inner join city_locations ON city_blocks.geoname_id = city_locations.geoname_id 
-                              where network >>= '{ipStr}' limit 1;";
-            connection.Open();
-            NpgsqlCommand npgSqlCommand = new NpgsqlCommand(query, connection);
+                              where network >>= '{ipStr}' limit 1;";   
+            string query2 = $"select autonomous_system_organization from asn_blocks ab where network >>= '{ipStr}'";
 
-            Object resultQuery = npgSqlCommand.ExecuteScalar();
+            var name = GetValueBySqlQuery(connection, query2); 
+            var resultQuery = GetValueBySqlQuery(connection, query);
+
             if (resultQuery != null)
-            {
-                LocationData locationData = new LocationData();
-                var result2 = (
+            { 
+                var locationDataEnumerable = (
                     from cityb in _context.CityBlocks
                     join cityl in _context.CityLocations on cityb.GeonameId equals cityl.GeonameId
                     where cityb.CityBlocksId == (long)resultQuery
                     select new LocationData
-                    {
-                        CityBlockId = cityb.CityBlocksId,
+                    { 
+                        ContinentName = name.ToString(),
                         CityName = cityl.CityName,
                         CountryName = cityl.CountryName,
                         CountryIsoCode = cityl.CountryIsoCode,
@@ -62,11 +58,17 @@ namespace LocationIp.Controllers
                         Subdivision1Name = cityl.Subdivision1Name
                     }).AsEnumerable();
 
-                return result2;
+                return new ObjectResult(locationDataEnumerable); 
             }
-
-            return null;
+            ModelState.AddModelError("IPAddress", "IP-адрес не найден");
+            return BadRequest(ModelState);
         }
 
+        private object GetValueBySqlQuery(NpgsqlConnection connection, string query)
+        {
+            NpgsqlCommand npgSqlCommand = new NpgsqlCommand(query, connection); 
+            return npgSqlCommand.ExecuteScalar();  
+        }
+         
     }
 }
