@@ -28,7 +28,7 @@ namespace LocationIp
         public void ConfigureServices(IServiceCollection services)
         {
             string connection = "Host=localhost;Database=postgres;Username=postgres;Password=123";
-            services.AddDbContext<postgresContext>(options => options.UseNpgsql(connection));
+            services.AddDbContext<postgresContext>(options => options.UseNpgsql(connection).EnableSensitiveDataLogging());
             services.AddControllers(); 
         }
 

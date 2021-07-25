@@ -8,7 +8,7 @@ namespace LocationIp
 {
     public class CityBlock
     {
-        public ValueTuple<IPAddress, int>? Network { get; set; }
+        public IPAddress? Network { get; set; }
         public long? GeonameId { get; set; }
         public long? RegisteredCountryGeonameId { get; set; }
         public long? RepresentedCountryGeonameId { get; set; }
