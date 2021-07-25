@@ -17,8 +17,8 @@ namespace LocationIp.Controllers
         public LocationIpController(postgresContext context)
         {
             _context = context;
-        }  
-
+        } 
+         
         //LocationIp/146.120.179.129
         [Route("{ipStr}")]
         [HttpGet]
@@ -50,7 +50,7 @@ namespace LocationIp.Controllers
                     where cityb.CityBlocksId == (long)resultQuery
                     select new LocationData
                     { 
-                        ContinentName = name.ToString(),
+                        ContinentName = name == null ? string.Empty : name.ToString(),
                         CityName = cityl.CityName,
                         CountryName = cityl.CountryName,
                         CountryIsoCode = cityl.CountryIsoCode,
