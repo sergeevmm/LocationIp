@@ -39,18 +39,18 @@ namespace LocationIp.Controllers
                               where network >>= '{ipStr}' limit 1;";   
             string query2 = $"select autonomous_system_organization from asn_blocks ab where network >>= '{ipStr}'";
 
-            var name = GetValueBySqlQuery(connection, query2); 
-            var resultQuery = GetValueBySqlQuery(connection, query);
+            var continentName = GetValueBySqlQuery(connection, query2); 
+            var cityBlockId = GetValueBySqlQuery(connection, query);
 
-            if (resultQuery != null)
+            if (cityBlockId != null)
             { 
                 var locationDataEnumerable = (
                     from cityb in _context.CityBlocks
                     join cityl in _context.CityLocations on cityb.GeonameId equals cityl.GeonameId
-                    where cityb.CityBlocksId == (long)resultQuery
+                    where cityb.CityBlocksId == (long)cityBlockId
                     select new LocationData
                     { 
-                        ContinentName = name == null ? string.Empty : name.ToString(),
+                        ContinentName = continentName == null ? string.Empty : continentName.ToString(),
                         CityName = cityl.CityName,
                         CountryName = cityl.CountryName,
                         CountryIsoCode = cityl.CountryIsoCode,
